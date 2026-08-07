@@ -1,9 +1,29 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import Genimage from '../components/Genimage';
+import { GenerateAiImage } from '../api';
 
 const Imageform = ({ post, setPost }) => {
+    const [loading, setLoading] = useState(false)
+
+    const genImageFun = async () => {
+        if (!post.prompt) return
+        setLoading(true)
+        try {
+            const res = await GenerateAiImage({ prompt: post.prompt })
+            setPost({ ...post, img: `data:image/jpeg;base64,${res?.data?.img}` })
+        } catch (error) {
+            console.error('Image generation failed:', error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const createPostFun = () => {
+
+    }
+
     return (
         <div className='flex items-center justify-center flex-col p-2 lg:p-4 h-full bg-gray-800 text-white'>
             <div className='flex items-center justify-center flex-col'>
@@ -33,14 +53,24 @@ const Imageform = ({ post, setPost }) => {
             </div>
             <div className='flex gap-1.5 mt-5'>
                 <button
-                    className='bg-blue-600  text-white font-outfit text-lg rounded-lg px-6 py-2 mt-3.5'
-                ><AutoAwesomeIcon /> Generate Image</button>
+                    onClick={genImageFun}
+                    disabled={loading || post.prompt === ""}
+                    className='bg-blue-600  text-white font-outfit text-lg rounded-lg px-6 py-2 mt-3.5 cursor-pointer active:scale-95 active:bg-blue-400 disabled:opacity-50 disabled:cursor-not-allowed'
+                ><AutoAwesomeIcon /> {loading ? 'Generating...' : 'Generate Image'}</button>
                 <button
                     className='bg-emerald-500 text-white font-outfit text-lg rounded-lg px-12 py-2 mt-3.5 disabled:opacity-50 disabled:cursor-not-allowed'
                     disabled={post.name === "" || post.prompt === "" || post.img === ""}
                 ><PostAddIcon /> Post Image</button>
             </div>
-            <Genimage src={post.img} />
+
+            {loading ? (
+                <div className='flex flex-col items-center justify-center mt-6 h-64 w-64 rounded-lg border-2 border-dashed border-gray-500'>
+                    <div className='h-10 w-10 border-4 border-gray-400 border-t-blue-500 rounded-full animate-spin'></div>
+                    <p className='mt-3 font-outfit text-gray-300'>Generating Image...</p>
+                </div>
+            ) : (
+                <Genimage src={post.img} />
+            )}
         </div>
     )
 }
