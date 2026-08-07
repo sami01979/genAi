@@ -6,6 +6,7 @@ import * as dotenv from "dotenv";
 import dns from "dns";
 dns.setServers(["8.8.8.8"])
 import PostRouter from "./routes/Posts.js"
+import GenerateImageRouter from "./routes/GenerateImage.js"
 
 dotenv.config();
 const app=express();
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 app.use("/api/post",PostRouter);
+app.use("/api/generateImage", GenerateImageRouter)
 
 app.use((err,req,res,next)=>{
     const status = err.status ||500;
