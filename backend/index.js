@@ -7,6 +7,7 @@ import dns from "dns";
 dns.setServers(["8.8.8.8"])
 import PostRouter from "./routes/Posts.js"
 import GenerateImageRouter from "./routes/GenerateImage.js"
+import AuthRouter from "./routes/Auth.js"
 
 dotenv.config();
 const app=express();
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
 app.use("/api/post",PostRouter);
 app.use("/api/generateImage", GenerateImageRouter)
+app.use("/api/auth", AuthRouter)
 
 app.use((err,req,res,next)=>{
     const status = err.status ||500;
@@ -53,5 +55,3 @@ const startServer=async()=>{
 }
 
 startServer();
-
-
