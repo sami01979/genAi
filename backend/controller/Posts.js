@@ -42,3 +42,20 @@ export const createPost = async (req, res, next) => {
         return res.status(500).json({ success: false, message: "Something went wrong" });
     }
 };
+
+export const deletePost = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const deleted = await Post.findByIdAndDelete(id);
+
+        if (!deleted) {
+            return res.status(404).json({ success: false, message: "Post not found" });
+        }
+
+        return res.status(200).json({ success: true, message: "Post deleted" });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: "Something went wrong" });
+    }
+};
