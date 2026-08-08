@@ -12,6 +12,11 @@ const PostSchema = new mongoose.Schema({
     img:{
         type:String,
         required:true
+    },
+    owner:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     }
 })
 

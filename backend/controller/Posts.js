@@ -1,5 +1,4 @@
 import Post from "../models/Post.js"
-import * as dotenv from "dotenv"
 import ImageKit from "imagekit";
 
 const imagekit = new ImageKit({
@@ -33,7 +32,8 @@ export const createPost = async (req, res, next) => {
         const newPost = await Post.create({
             name,
             prompt,
-            img: uploadResponse.url
+            img: uploadResponse.url,
+            owner: req.userId
         });
 
         return res.status(200).json({ success: true, data: newPost });
@@ -47,11 +47,17 @@ export const deletePost = async (req, res, next) => {
     try {
         const { id } = req.params;
 
-        const deleted = await Post.findByIdAndDelete(id);
+        const post = await Post.findById(id);
 
-        if (!deleted) {
+        if (!post) {
             return res.status(404).json({ success: false, message: "Post not found" });
         }
+
+        if (post.owner.toString() !== req.userId) {
+            return res.status(403).json({ success: false, message: "Not authorized to delete this post" });
+        }
+
+        await Post.findByIdAndDelete(id);
 
         return res.status(200).json({ success: true, message: "Post deleted" });
     } catch (error) {
