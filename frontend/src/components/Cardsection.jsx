@@ -21,32 +21,26 @@ const Cardsection = ({ item }) => {
       }
       const ext = mimeToExt[blob.type] || 'jpg'
 
-      saveAs(blob, `${item.author || 'image'}.${ext}`)
+      saveAs(blob, `${item.name || 'image'}.${ext}`)
     } catch (error) {
       console.error('Download failed:', error)
     }
   }
 
-    return (
-        <div className='w-full p-4 mt-5'>
-            <div className='grid grid-cols-2 gap-4 p-0.5 lg:p-4 w-full lg:grid-cols-4'>
-                <div className='h-80  bg-gray-300 overflow-hidden rounded-md p-2'>
-                    <img className='h-64 w-full object-cover ' src={item.img} alt="" />
-                    <div className='flex items-end justify-between'>
-                        <div>
-                            <h1>{item.author}</h1>
-                            <h2>{item.prompt}</h2>
-                        </div>
-                        <div
-                        onClick={handleDownload}
-                        className='cursor-pointer'>
-                            < DownloadIcon />
-                        </div>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className='h-80 bg-gray-300 overflow-hidden rounded-md p-2'>
+      <img className='h-64 w-full object-cover' src={item.img} alt="" />
+      <div className='flex items-end justify-between'>
+        <div>
+          <h1 className='font-outfit text-lg '>{item.name}</h1>
+          <h2 className='font-outfit font-medium text-gray-700'>{item.prompt}</h2>
         </div>
-    )
+        <div onClick={handleDownload} className='cursor-pointer'>
+          <DownloadIcon />
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default Cardsection

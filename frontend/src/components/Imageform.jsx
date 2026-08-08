@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
+import{useNavigate} from "react-router-dom"
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import Genimage from '../components/Genimage';
-import { GenerateAiImage } from '../api';
+import { CreatePost, GenerateAiImage } from '../api';
 
 const Imageform = ({ post, setPost }) => {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false)
+    const [posting, setPosting] = useState(false)
 
     const genImageFun = async () => {
         if (!post.prompt) return
@@ -20,8 +23,16 @@ const Imageform = ({ post, setPost }) => {
         }
     }
 
-    const createPostFun = () => {
-
+    const createPostFun = async () => {
+        setPosting(true)
+        try {
+            await CreatePost(post)
+            navigate("/")
+        } catch (error) {
+            console.error('Post creation failed:', error)
+        } finally {
+            setPosting(false)
+        }
     }
 
     return (
@@ -58,13 +69,25 @@ const Imageform = ({ post, setPost }) => {
                     className='bg-blue-600  text-white font-outfit text-lg rounded-lg px-6 py-2 mt-3.5 cursor-pointer active:scale-95 active:bg-blue-400 disabled:opacity-50 disabled:cursor-not-allowed'
                 ><AutoAwesomeIcon /> {loading ? 'Generating...' : 'Generate Image'}</button>
                 <button
-                    className='bg-emerald-500 text-white font-outfit text-lg rounded-lg px-12 py-2 mt-3.5 disabled:opacity-50 disabled:cursor-not-allowed'
-                    disabled={post.name === "" || post.prompt === "" || post.img === ""}
-                ><PostAddIcon /> Post Image</button>
+                    className='bg-emerald-500 text-white font-outfit text-lg rounded-lg px-12 py-2 mt-3.5 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 active:bg-emerald-300 cursor-pointer flex items-center gap-2 justify-center'
+                    disabled={posting || post.name === "" || post.prompt === "" || post.img === ""}
+                    onClick={createPostFun}
+                >
+                    {posting ? (
+                        <>
+                            <span className='h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin'></span>
+                            Posting...
+                        </>
+                    ) : (
+                        <>
+                            <PostAddIcon /> Post Image
+                        </>
+                    )}
+                </button>
             </div>
 
             {loading ? (
-                <div className='flex flex-col items-center justify-center mt-6 h-64 w-64 rounded-lg border-2 border-dashed border-gray-500'>
+                <div className='flex flex-col items-center justify-center mt-6 h-80 w-[37%] rounded-lg border-2 border-dashed border-gray-500'>
                     <div className='h-10 w-10 border-4 border-gray-400 border-t-blue-500 rounded-full animate-spin'></div>
                     <p className='mt-3 font-outfit text-gray-300'>Generating Image...</p>
                 </div>
