@@ -3,9 +3,12 @@ import { saveAs } from 'file-saver'
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { DeletePost } from '../api'
+import { useAuth } from '../context/AuthContext'
 
 const Cardsection = ({ item, onDelete }) => {
   const [deleting, setDeleting] = useState(false)
+  const { user } = useAuth()
+  const isOwner = user && item.owner === user.id
 
   const handleDownload = async () => {
     try {
@@ -56,12 +59,14 @@ const Cardsection = ({ item, onDelete }) => {
           <div onClick={handleDownload} className='cursor-pointer border-2 px-1.5 py-0.5'>
             <DownloadIcon />
           </div>
-          <div
-            onClick={deleting ? undefined : handleDelete}
-            className={`cursor-pointer border-2 px-1.5 py-0.5 ${deleting ? 'opacity-50 pointer-events-none' : ''}`}
-          >
-            <DeleteForeverIcon />
-          </div>
+          {isOwner && (
+            <div
+              onClick={deleting ? undefined : handleDelete}
+              className={`cursor-pointer border-2 px-1.5 py-0.5 ${deleting ? 'opacity-50 pointer-events-none' : ''}`}
+            >
+              <DeleteForeverIcon />
+            </div>
+          )}
         </div>
       </div>
     </div>
