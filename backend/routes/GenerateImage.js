@@ -4,7 +4,7 @@ import { generateImage } from "../controller/GenerateAiImage.js";
 
 const router = express.Router();
 
-router.get("/",generateImage);
+router.post("/",generateImage);
 
 
 export default router;
