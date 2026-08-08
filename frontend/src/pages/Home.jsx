@@ -8,17 +8,20 @@ const Home = () => {
   const [posts, setPost] = useState([])
   const [search, setSearch] = useState("")
   const [filteredpost, setFilteredpost] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const getPosts = async () => {
-    await GetPosts()
-      .then((res) => {
-        setPost(res?.data?.data)
-        setFilteredpost(res?.data?.data)
-      })
-      .catch((err) => {
-        console.log(err)
-        console.log("something went wrong")
-      })
+    setLoading(true)
+    try {
+      const res = await GetPosts()
+      setPost(res?.data?.data || [])
+      setFilteredpost(res?.data?.data || [])
+    } catch (err) {
+      console.log(err)
+      console.log("something went wrong")
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -26,38 +29,39 @@ const Home = () => {
   }, [])
 
   const handleDelete = (id) => {
-  setPost((prev) => prev.filter((item) => item._id !== id))
-  setFilteredpost((prev) => prev.filter((item) => item._id !== id))
-}
-  /* search */
+    setPost((prev) => prev.filter((item) => item._id !== id))
+    setFilteredpost((prev) => prev.filter((item) => item._id !== id))
+  }
 
   useEffect(() => {
-  if (!search) {
-    setFilteredpost(posts)
-    return
-  }
-  const searchFilteredpost = posts.filter((item) => {
-    const promptMatch = item?.prompt?.toLowerCase().includes(search.toLowerCase());
-    const authorMatch = item?.name?.toLowerCase().includes(search.toLowerCase());
-    return promptMatch || authorMatch;
-  })
-  setFilteredpost(searchFilteredpost)
-}, [posts, search])
+    if (!search) {
+      setFilteredpost(posts)
+      return
+    }
+    const searchFilteredpost = posts.filter((item) => {
+      const promptMatch = item?.prompt?.toLowerCase().includes(search.toLowerCase());
+      const authorMatch = item?.name?.toLowerCase().includes(search.toLowerCase());
+      return promptMatch || authorMatch;
+    })
+    setFilteredpost(searchFilteredpost)
+  }, [posts, search])
 
   return (
     <div>
       <Heading />
-      <Searchbar search ={search} setSearch={setSearch} />
+      <Searchbar search={search} setSearch={setSearch} />
       {
-        filteredpost.length === 0 ? (
-          <>no posts found </>
+        loading ? (
+          <p className='text-center p-10 font-outfit'>Loading posts...</p>
+        ) : filteredpost.length === 0 ? (
+          <p className='text-center p-10 font-outfit'>No posts found</p>
         ) : (
           <div className='grid grid-cols-2 gap-4 p-0.5 lg:p-4 w-full lg:grid-cols-4'>
             {filteredpost
               .slice()
               .reverse()
-              .map((item, index) => (
-                <Cardsection key={index} item={item} onDelete={handleDelete}/>
+              .map((item) => (
+                <Cardsection key={item._id} item={item} onDelete={handleDelete}/>
               ))
             }
           </div>
