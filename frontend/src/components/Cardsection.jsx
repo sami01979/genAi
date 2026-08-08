@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { saveAs } from 'file-saver'
 import DownloadIcon from '@mui/icons-material/Download';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { DeletePost } from '../api'
 
-const Cardsection = ({ item }) => {
+const Cardsection = ({ item, onDelete }) => {
+  const [deleting, setDeleting] = useState(false)
+
   const handleDownload = async () => {
     try {
       const response = await fetch(item.img)
@@ -27,16 +31,37 @@ const Cardsection = ({ item }) => {
     }
   }
 
+  const handleDelete = async () => {
+    if (!window.confirm('Delete this image?')) return
+    setDeleting(true)
+    try {
+      await DeletePost(item._id)
+      onDelete(item._id)
+    } catch (error) {
+      console.error('Delete failed:', error)
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   return (
-    <div className='h-80 bg-gray-300 overflow-hidden rounded-md p-2'>
+    <div className='h-80  bg-gray-300 overflow-hidden rounded-md p-2'>
       <img className='h-64 w-full object-cover' src={item.img} alt="" />
-      <div className='flex items-end justify-between'>
-        <div>
-          <h1 className='font-outfit text-lg '>{item.name}</h1>
-          <h2 className='font-outfit font-medium text-gray-700'>{item.prompt}</h2>
+      <div className='flex items-start justify-between gap-2'>
+        <div className='min-w-0 '>
+          <h1 className='font-outfit text-lg truncate'>{item.name}</h1>
+          <h2 className='font-outfit font-medium text-gray-700 '>{item.prompt}</h2>
         </div>
-        <div onClick={handleDownload} className='cursor-pointer'>
-          <DownloadIcon />
+        <div className='flex p-3 gap-4 shrink-0'>
+          <div onClick={handleDownload} className='cursor-pointer border-2 px-1.5 py-0.5'>
+            <DownloadIcon />
+          </div>
+          <div
+            onClick={deleting ? undefined : handleDelete}
+            className={`cursor-pointer border-2 px-1.5 py-0.5 ${deleting ? 'opacity-50 pointer-events-none' : ''}`}
+          >
+            <DeleteForeverIcon />
+          </div>
         </div>
       </div>
     </div>

@@ -25,6 +25,10 @@ const Home = () => {
     getPosts()
   }, [])
 
+  const handleDelete = (id) => {
+  setPost((prev) => prev.filter((item) => item._id !== id))
+  setFilteredpost((prev) => prev.filter((item) => item._id !== id))
+}
   /* search */
 
   useEffect(() => {
@@ -53,7 +57,7 @@ const Home = () => {
               .slice()
               .reverse()
               .map((item, index) => (
-                <Cardsection key={index} item={item} />
+                <Cardsection key={index} item={item} onDelete={handleDelete}/>
               ))
             }
           </div>

@@ -36,10 +36,10 @@ const Imageform = ({ post, setPost }) => {
     }
 
     return (
-        <div className='flex items-center justify-center flex-col p-2 lg:p-4 h-full bg-gray-800 text-white'>
+        <div className='flex items-center justify-center flex-col p-2 lg:p-4 h-screen lg:h-full md:h-screen bg-gray-800 text-white'>
             <div className='flex items-center justify-center flex-col'>
                 <h1 className='font-outfit text-2xl mt-2.5'>Generate Image With <span className='text-3xl font-bitcount'>AI</span></h1>
-                <h2 className='font-outfit text-xl'>Write your prompt according to the image you want to generate</h2>
+                <h2 className='font-outfit text-xl text-center sm:text-left'>Write your prompt according to the image you want to generate</h2>
                 <form
                     className='w-4/5 mt-10 h-full'
                     action="">
@@ -66,7 +66,7 @@ const Imageform = ({ post, setPost }) => {
                 <button
                     onClick={genImageFun}
                     disabled={loading || post.prompt === ""}
-                    className='bg-blue-600  text-white font-outfit text-lg rounded-lg px-6 py-2 mt-3.5 cursor-pointer active:scale-95 active:bg-blue-400 disabled:opacity-50 disabled:cursor-not-allowed'
+                    className='bg-blue-600  text-white font-outfit text-lg rounded-lg px-3 lg:px-6 py-2 mt-3.5 cursor-pointer active:scale-95 active:bg-blue-400 disabled:opacity-50 disabled:cursor-not-allowed'
                 ><AutoAwesomeIcon /> {loading ? 'Generating...' : 'Generate Image'}</button>
                 <button
                     className='bg-emerald-500 text-white font-outfit text-lg rounded-lg px-12 py-2 mt-3.5 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 active:bg-emerald-300 cursor-pointer flex items-center gap-2 justify-center'
@@ -75,7 +75,7 @@ const Imageform = ({ post, setPost }) => {
                 >
                     {posting ? (
                         <>
-                            <span className='h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin'></span>
+                            <span className='h-3 w-5 lg:h-5 border-2 border-white border-t-transparent rounded-full animate-spin'></span>
                             Posting...
                         </>
                     ) : (
@@ -87,7 +87,7 @@ const Imageform = ({ post, setPost }) => {
             </div>
 
             {loading ? (
-                <div className='flex flex-col items-center justify-center mt-6 h-80 w-[37%] rounded-lg border-2 border-dashed border-gray-500'>
+                <div className='flex flex-col items-center justify-center mt-6 h-60 w-[60%] lg:h-80 lg:w-[37%] rounded-lg border-2 border-dashed border-gray-500'>
                     <div className='h-10 w-10 border-4 border-gray-400 border-t-blue-500 rounded-full animate-spin'></div>
                     <p className='mt-3 font-outfit text-gray-300'>Generating Image...</p>
                 </div>
