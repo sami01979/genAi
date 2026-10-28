@@ -10,7 +10,7 @@ const router = express.Router()
 router.use(verifyToken)
 
 router.get("/", getConversations)
-router.get("/unread-count", getUnreadCount)   // must be above "/:userId"
+router.get("/unread-count", getUnreadCount)  
 router.post("/block/:userId", toggleBlock)
 router.put("/:userId/read", markRead)
 router.get("/:userId", getMessages)
