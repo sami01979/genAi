@@ -8,6 +8,8 @@ import Register from './pages/Register'
 import Profile from './pages/Profile'
 import PostDetail from './pages/PostDetail'
 import UserProfile from './pages/UserProfile'
+import Messages from './pages/Messages'
+import Chat from './pages/Chat'
 
 const App = () => {
   return (
@@ -21,6 +23,8 @@ const App = () => {
         <Route path='/register' element={<Register/>} />
         <Route path='/profile' element={<Profile/>} />
         <Route path='/user/:userId' element={<UserProfile/>} />
+        <Route path='/messages' element={<Messages/>} />
+        <Route path='/messages/:userId' element={<Chat/>} />
       </Routes>
     </div>
   )

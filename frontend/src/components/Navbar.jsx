@@ -7,7 +7,9 @@ import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import MailIcon from '@mui/icons-material/Mail';
 import { useAuth } from '../context/AuthContext'
+import { useSocket } from '../context/SocketContext'
 
 const avatarColors = [
     'bg-blue-600',
@@ -29,13 +31,14 @@ const Navbar = () => {
     const location = useLocation();
     const path = location.pathname.split("/");
     const { user, logout } = useAuth()
+    const { unread } = useSocket()
     const [menuOpen, setMenuOpen] = useState(false)
     const [hidden, setHidden] = useState(false)
     const [compact, setCompact] = useState(false)
     const lastY = useRef(0)
     const menuRef = useRef(null)
 
-
+    // hide on scroll down, show (compact) on scroll up
     useEffect(() => {
         const onScroll = () => {
             const y = window.scrollY
@@ -64,7 +67,7 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', onScroll)
     }, [])
 
-
+    // close the menu on outside click or Esc
     useEffect(() => {
         if (!menuOpen) return
 
@@ -108,20 +111,23 @@ const Navbar = () => {
         navigate("/")
     }
 
-    const btnClass = `bg-blue-600 rounded-2xl text-white font-outfit flex items-center justify-between gap-1.5 transition-all duration-300 ${compact ? 'px-3 py-1 text-base' : 'px-4 py-2 text-lg'
-        }`
+    const btnClass = `bg-blue-600 rounded-2xl text-white font-outfit flex items-center justify-between gap-1.5 transition-all duration-300 ${
+        compact ? 'px-3 py-1 text-base' : 'px-4 py-2 text-lg'
+    }`
 
     const itemClass = 'w-full flex items-center gap-2 text-left px-4 py-2.5 text-sm hover:bg-gray-100 cursor-pointer'
 
     return (
         <>
             <div
-                className={`fixed top-0 left-0 right-0 z-50 bg-gray-200 flex items-center justify-between px-4 transition-all duration-300 ${compact ? 'h-[60px]' : 'h-[76px]'
-                    } ${hidden ? '-translate-y-full' : 'translate-y-0'}`}
+                className={`fixed top-0 left-0 right-0 z-50 bg-gray-200 flex items-center justify-between px-4 transition-all duration-300 ${
+                    compact ? 'h-[60px]' : 'h-[76px]'
+                } ${hidden ? '-translate-y-full' : 'translate-y-0'}`}
             >
                 <h1
-                    className={`font-bitcount cursor-pointer tracking-widest transition-all duration-300 ${compact ? 'text-2xl' : 'text-3xl'
-                        }`}
+                    className={`font-bitcount tracking-widest cursor-pointer transition-all duration-300 ${
+                        compact ? 'text-xl' : 'text-2xl'
+                    }`}
                     onClick={handleLogoClick}
                 >
                     Chitro
@@ -140,6 +146,21 @@ const Navbar = () => {
                         )
                     }
 
+                    {user && (
+                        <button
+                            onClick={() => navigate("/messages")}
+                            className='relative cursor-pointer flex items-center'
+                            aria-label='Messages'
+                        >
+                            <MailIcon fontSize={compact ? 'medium' : 'large'} />
+                            {unread > 0 && (
+                                <span className='absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full min-w-5 h-5 px-1 flex items-center justify-center'>
+                                    {unread > 99 ? '99+' : unread}
+                                </span>
+                            )}
+                        </button>
+                    )}
+
                     <div className='relative' ref={menuRef}>
                         <button
                             onClick={() => setMenuOpen(!menuOpen)}
@@ -149,8 +170,9 @@ const Navbar = () => {
                         >
                             {user ? (
                                 <div
-                                    className={`${colorFor(user.name)} text-white rounded-full flex items-center justify-center font-outfit font-semibold uppercase transition-all duration-300 ${compact ? 'w-8 h-8 text-sm' : 'w-10 h-10 text-lg'
-                                        }`}
+                                    className={`${colorFor(user.name)} text-white rounded-full flex items-center justify-center font-outfit font-semibold uppercase transition-all duration-300 ${
+                                        compact ? 'w-8 h-8 text-sm' : 'w-10 h-10 text-lg'
+                                    }`}
                                 >
                                     {user.name?.[0] || '?'}
                                 </div>
@@ -160,10 +182,11 @@ const Navbar = () => {
                         </button>
 
                         <div
-                            className={`absolute right-0 mt-2 w-52 bg-white rounded-lg shadow-lg border overflow-hidden origin-top-right transition duration-150 ${menuOpen
+                            className={`absolute right-0 mt-2 w-52 bg-white rounded-lg shadow-lg border overflow-hidden origin-top-right transition duration-150 ${
+                                menuOpen
                                     ? 'opacity-100 scale-100 pointer-events-auto'
                                     : 'opacity-0 scale-95 pointer-events-none'
-                                }`}
+                            }`}
                         >
                             {user ? (
                                 <>
@@ -196,8 +219,8 @@ const Navbar = () => {
                 </div>
             </div>
 
-            
-            <div className='h-19' />
+            {/* spacer so page content doesn't sit under the fixed navbar */}
+            <div className='h-[76px]' />
         </>
     )
 }

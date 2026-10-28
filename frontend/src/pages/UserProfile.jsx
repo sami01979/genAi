@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { GetUserPosts } from '../api'
 import Cardsection from '../components/Cardsection'
+import { useAuth } from '../context/AuthContext'
 
 const UserProfile = () => {
   const { userId } = useParams()
+  const { user } = useAuth()
+  const navigate = useNavigate()
   const [profile, setProfile] = useState(null)
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -34,10 +37,23 @@ const UserProfile = () => {
 
   return (
     <div className='p-4 font-outfit'>
-      <h1 className='text-2xl font-semibold'>{profile.name}</h1>
-      <p className='text-gray-600 mb-4'>
-        {posts.length} {posts.length === 1 ? 'image' : 'images'}
-      </p>
+      <div className='flex items-center justify-between gap-3 mb-4'>
+        <div>
+          <h1 className='text-2xl font-semibold'>{profile.name}</h1>
+          <p className='text-gray-600'>
+            {posts.length} {posts.length === 1 ? 'image' : 'images'}
+          </p>
+        </div>
+
+        {user && user.id !== userId && (
+          <button
+            onClick={() => navigate(`/messages/${userId}`)}
+            className='bg-blue-600 text-white rounded-2xl px-4 py-2 cursor-pointer'
+          >
+            Message
+          </button>
+        )}
+      </div>
 
       {posts.length === 0 ? (
         <p>No images yet.</p>
