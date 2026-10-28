@@ -18,7 +18,7 @@ export const SocketProvider = ({ children }) => {
       const res = await GetUnreadCount()
       setUnread(res.data.data.count)
     } catch {
-      /* ignore */
+     
     }
   }, [])
 

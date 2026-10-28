@@ -24,7 +24,7 @@ const Chat = () => {
   const addMessage = (m) =>
     setMessages((prev) => (prev.some((x) => x._id === m._id) ? prev : [...prev, m]))
 
-  // load the conversation
+
   useEffect(() => {
     if (!user) {
       setLoading(false)
@@ -50,7 +50,7 @@ const Chat = () => {
     load()
   }, [userId, user?.id])
 
-  // live incoming messages
+
   useEffect(() => {
     if (!socket) return
     const onNew = (m) => {
@@ -64,7 +64,7 @@ const Chat = () => {
     return () => socket.off('message:new', onNew)
   }, [socket, userId, user?.id])
 
-  // keep the view at the newest message
+
   useEffect(() => {
     if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight
   }, [messages])
@@ -112,7 +112,7 @@ const Chat = () => {
 
   return (
     <div className='max-w-2xl mx-auto h-[calc(100dvh-76px)] flex flex-col font-outfit'>
-      {/* header */}
+    
       <div className='flex items-center justify-between gap-2 px-4 py-3 border-b bg-white'>
         <div className='flex items-center gap-3 min-w-0'>
           <Link to='/messages' aria-label='Back'>
@@ -130,7 +130,7 @@ const Chat = () => {
         </button>
       </div>
 
-      {/* messages */}
+     
       <div ref={listRef} className='flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-2 bg-gray-100'>
         {messages.length === 0 && (
           <p className='text-center text-gray-500 mt-6'>Say hi to {other?.name} 👋</p>
@@ -154,7 +154,7 @@ const Chat = () => {
         })}
       </div>
 
-      {/* input */}
+    
       <div className='border-t bg-white p-3'>
         {canSend ? (
           <form onSubmit={handleSend} className='flex gap-2'>
