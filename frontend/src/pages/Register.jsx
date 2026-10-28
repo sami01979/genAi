@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { RegisterUser } from '../api'
 import { useAuth } from '../context/AuthContext'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
 
 const Register = () => {
   const navigate = useNavigate()
@@ -9,6 +11,7 @@ const Register = () => {
   const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -46,14 +49,22 @@ const Register = () => {
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           required
         />
-        <input
-          type="password"
-          placeholder='Password'
-          className='h-12 rounded-lg border-2 px-4 py-2 bg-transparent'
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          required
-        />
+        <div className='relative'>
+          <input
+            type={showPassword ? 'text' : 'password'}
+            placeholder='Password'
+            className='h-12 w-full rounded-lg border-2 px-4 py-2 pr-12 bg-transparent'
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            required
+          />
+          <div
+            onClick={() => setShowPassword(!showPassword)}
+            className='absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer'
+          >
+            {showPassword ? <VisibilityOff /> : <Visibility />}
+          </div>
+        </div>
         <button
           type="submit"
           disabled={loading}

@@ -6,6 +6,8 @@ import Navbar from './components/Navbar'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Profile from './pages/Profile'
+import PostDetail from './pages/PostDetail'
+import UserProfile from './pages/UserProfile'
 
 const App = () => {
   return (
@@ -14,9 +16,11 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Home/>} />
         <Route path='/post' element={<Createpost/>} />
+        <Route path='/post/:id' element={<PostDetail/>} />
         <Route path='/login' element={<Login/>} />
         <Route path='/register' element={<Register/>} />
         <Route path='/profile' element={<Profile/>} />
+        <Route path='/user/:userId' element={<UserProfile/>} />
       </Routes>
     </div>
   )
