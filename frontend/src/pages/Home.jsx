@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
+import { useNavigationType } from 'react-router-dom'
 import Heading from '../components/Heading'
 import Searchbar from '../components/Searchbar'
 import Cardsection from '../components/Cardsection'
 import { GetPosts } from '../api'
 
 const Home = () => {
+  const navType = useNavigationType()
+
   const [posts, setPost] = useState([])
-  const [search, setSearch] = useState("")
+  const [search, setSearch] = useState(() =>
+    navType === 'POP' ? sessionStorage.getItem('homeSearch') || "" : ""
+  )
   const [filteredpost, setFilteredpost] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -27,6 +32,19 @@ const Home = () => {
   useEffect(() => {
     getPosts()
   }, [])
+
+  useEffect(() => {
+    sessionStorage.setItem('homeSearch', search)
+  }, [search])
+
+
+  useLayoutEffect(() => {
+    if (loading) return
+    if (navType === 'POP') {
+      const y = sessionStorage.getItem('homeScrollY')
+      if (y) window.scrollTo(0, parseInt(y, 10))
+    }
+  }, [loading])
 
   const handleDelete = (id) => {
     setPost((prev) => prev.filter((item) => item._id !== id))
@@ -56,7 +74,10 @@ const Home = () => {
         ) : filteredpost.length === 0 ? (
           <p className='text-center p-10 font-outfit'>No posts found</p>
         ) : (
-          <div className='grid grid-cols-1 gap-2 p-0 w-full sm:grid-cols-2 sm:gap-4 sm:p-2 lg:grid-cols-4 lg:p-4'>
+          <div
+            onClickCapture={() => sessionStorage.setItem('homeScrollY', String(window.scrollY))}
+            className='grid grid-cols-1 gap-2 p-0 w-full sm:grid-cols-2 sm:gap-4 sm:p-2 lg:grid-cols-4 lg:p-4'
+          >
             {filteredpost
               .slice()
               .reverse()

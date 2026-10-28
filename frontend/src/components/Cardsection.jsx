@@ -2,19 +2,16 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { saveAs } from 'file-saver'
 import DownloadIcon from '@mui/icons-material/Download'
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import CommentIcon from '@mui/icons-material/Comment'
-import { DeletePost, ToggleLike } from '../api'
+import { ToggleLike } from '../api'
 import { useAuth } from '../context/AuthContext'
 
-const Cardsection = ({ item, onDelete }) => {
-  const [deleting, setDeleting] = useState(false)
+const Cardsection = ({ item }) => {
   const [likes, setLikes] = useState(item.likes || [])
   const { user } = useAuth()
   const navigate = useNavigate()
-  const isOwner = user && item.owner === user.id
   const liked = !!user && likes.includes(user.id)
 
   const handleLike = async () => {
@@ -46,24 +43,11 @@ const Cardsection = ({ item, onDelete }) => {
     }
   }
 
-  const handleDelete = async () => {
-    if (!window.confirm('Delete this image?')) return
-    setDeleting(true)
-    try {
-      await DeletePost(item._id)
-      onDelete(item._id)
-    } catch (error) {
-      console.error('Delete failed:', error)
-    } finally {
-      setDeleting(false)
-    }
-  }
-
   return (
-    <div className='h-80 bg-gray-300 overflow-hidden rounded-md p-0 sm:p-2'>
-      <div className='relative h-64 w-full'>
+    <div className='bg-gray-300 overflow-hidden rounded-md p-0 sm:p-2'>
+      <div className='relative w-full aspect-square'>
         <img
-          className='h-full w-full object-cover cursor-pointer  rounded-md'
+          className='h-full w-full object-cover cursor-pointer'
           src={item.img}
           alt=""
           onClick={() => navigate(`/post/${item._id}`)}
@@ -85,10 +69,10 @@ const Cardsection = ({ item, onDelete }) => {
         </div>
       </div>
 
-      <div className='flex items-start justify-between gap-2 px-2 pt-1 sm:px-0 sm:pt-0'>
+      <div className='flex items-start justify-between gap-2 px-2 pt-1 pb-1 sm:px-0'>
         <div className='min-w-0'>
-          <h1 className='font-outfit text-lg font-bold mb-1 mt-0.5 truncate'>{item.name}</h1>
-          <h2 className='font-outfit font-medium text-gray-700'>{item.prompt}</h2>
+          <h1 className='font-outfit text-lg font-bold tracking-wide truncate'>{item.name}</h1>
+          <h2 className='font-outfit font-medium text-gray-700 line-clamp-2'>{item.prompt}</h2>
         </div>
         <div className='flex p-3 gap-4 shrink-0'>
           <div onClick={handleDownload} className='cursor-pointer border-2 px-1.5 py-0.5'>
