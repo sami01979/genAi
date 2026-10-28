@@ -60,10 +60,10 @@ const Cardsection = ({ item, onDelete }) => {
   }
 
   return (
-    <div className='h-80 bg-gray-300 overflow-hidden rounded-md p-2'>
+    <div className='h-80 bg-gray-300 overflow-hidden rounded-md p-0 sm:p-2'>
       <div className='relative h-64 w-full'>
         <img
-          className='h-full w-full object-cover cursor-pointer'
+          className='h-full w-full object-cover cursor-pointer  rounded-md'
           src={item.img}
           alt=""
           onClick={() => navigate(`/post/${item._id}`)}
@@ -85,16 +85,15 @@ const Cardsection = ({ item, onDelete }) => {
         </div>
       </div>
 
-      <div className='flex items-start justify-between gap-2'>
+      <div className='flex items-start justify-between gap-2 px-2 pt-1 sm:px-0 sm:pt-0'>
         <div className='min-w-0'>
-          <h1 className='font-outfit text-lg truncate'>{item.name}</h1>
+          <h1 className='font-outfit text-lg font-bold mb-1 mt-0.5 truncate'>{item.name}</h1>
           <h2 className='font-outfit font-medium text-gray-700'>{item.prompt}</h2>
         </div>
         <div className='flex p-3 gap-4 shrink-0'>
           <div onClick={handleDownload} className='cursor-pointer border-2 px-1.5 py-0.5'>
             <DownloadIcon />
           </div>
-          
         </div>
       </div>
     </div>

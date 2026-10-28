@@ -56,7 +56,7 @@ const Home = () => {
         ) : filteredpost.length === 0 ? (
           <p className='text-center p-10 font-outfit'>No posts found</p>
         ) : (
-          <div className='grid grid-cols-2 gap-4 p-0.5 lg:p-4 w-full lg:grid-cols-4'>
+          <div className='grid grid-cols-1 gap-2 p-0 w-full sm:grid-cols-2 sm:gap-4 sm:p-2 lg:grid-cols-4 lg:p-4'>
             {filteredpost
               .slice()
               .reverse()
